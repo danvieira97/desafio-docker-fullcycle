@@ -1,17 +1,11 @@
-FROM golang:1.19-alpine3.16 as build
+FROM golang:1.8.4-alpine3.6 as builder
 
-WORKDIR /app
-RUN go mod init github.com/danvieira97/desafio-docker
-COPY main.go ./
-
-
+COPY . .
 RUN go build -o /go-fullcycle
 
-FROM alpine:latest
+FROM scratch
 
-WORKDIR /
+COPY --from=builder /go-fullcycle /go-fullcycle
 
-COPY --from=build /go-fullcycle /go-fullcycle
-
-ENTRYPOINT ["/go-fullcycle"]
+CMD ["/go-fullcycle"]
            
